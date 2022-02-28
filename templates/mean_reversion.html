@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap Fluid Layout</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">#2theMOON</a>
+      <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav">
+          <a href="#" class="nav-item nav-link active">Home</a>
+          <a href="#" class="nav-item nav-link">Services</a>
+          <a href="#" class="nav-item nav-link">About</a>
+          <a href="#" class="nav-item nav-link">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        {% if session['ticker']%}
+        <div class="jumbotron">
+          <h1 class="display-4">{{session['ticker'].upper()}}</h1>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{{ url_for('home') }}">BoilingerBands</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('fib') }}">Fibonachi</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('prediction') }}">Prediction</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('mean_reversion_bb') }}">Mean reversion BB</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('mlbbacktester') }}">mlbbacktester</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('financial') }}">Finance data</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('sma_strategy') }}">SMA strategy</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-10">
+        <h3>Bollinge Baand Mean Reversion</h3>
+        {% if position == 1 %}
+          <div> Position is: <strong>{{position }} oversold</strong>  -> go long</div>
+        {% elif position == -1 %}
+            <div> Position is: <strong>{{position }} overbought</strong>  -> go short</div>
+        {% elif position == 0  %}
+          <div> Position is: <strong>{{position }}</strong> it is crossing SMA ("Middle Band") -> go neutral. Neutral means closing a long or a short position. If you buy a stock/currency pair, you go long. If you sell the stock/currency pair, you close the position and go neutral. It´s called neutral because you are not affected by any price changes</div>
+        {% else %}
+            <div>No data </div>
+        {% endif %}
+        </p>
+        <div class="chart" id="plot_bollinger_bands">
+          <script>
+            var graphs = {{ plot_bollinger_bands | safe}};
+            Plotly.plot('plot_bollinger_bands', graphs, {});
+          </script>
+        </div>
+        <div class="chart" id="plot_bb_hold_sell">
+          <script>
+            var graphs = {{ plot_bb_hold_sell | safe}};
+            Plotly.plot('plot_bb_hold_sell', graphs, {});
+          </script>
+        </div>
+        <h3>Strategy{{test_strategy[0]}} / hold and buy{{test_strategy[1]}}</h3>
+        <h3>Number of trades using default 30 / 2 SMA</h3>
+        
+        {% for i, v in trades_old.items() %}
+          {{ 'trades: ', i, 'amount: ', v}}
+        {% endfor %}
+        <h1>Forward testing</h1>
+        <h3>Strategy{{new_test_strategy[0]}} / hold and buy{{new_test_strategy[1]}}</h3>
+        <h3>Number of trades after calculating new strategy</h3>
+        
+        {% for i, v in trades_new.items() %}
+          {{ 'trades: ', i, 'amount: ', v}}
+        {% endfor %}
+
+        <div class="chart" id="plot_results">
+          <script>
+            var graphs = {{ plot_results | safe}};
+            Plotly.plot('plot_results', graphs, {});
+          </script>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <hr>
+  <footer>
+    <div class="row">
+      <div class="col-md-6">
+        <p>Copyright &copy; 2021 To the Moon</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="#" class="text-dark">Terms of Use</a>
+        <span class="text-muted mx-2">|</span>
+        <a href="#" class="text-dark">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+  </div>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+<!-- https://blog.heptanalytics.com/flask-plotly-dashboard/ -->

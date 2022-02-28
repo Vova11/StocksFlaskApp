@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap Fluid Layout</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">#2theMOON</a>
+      <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav">
+          <a href="#" class="nav-item nav-link active">Home</a>
+          <a href="#" class="nav-item nav-link">Services</a>
+          <a href="#" class="nav-item nav-link">About</a>
+          <a href="#" class="nav-item nav-link">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        {% if session['ticker']%}
+        <div class="jumbotron">
+          <h1 class="display-4">{{session['ticker'].upper()}}</h1>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{{ url_for('home') }}">BoilingerBands</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('fib') }}">Fibonachi</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('prediction') }}">Prediction</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('mean_reversion_bb') }}">Mean reversion BB</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('mlbbacktester') }}">mlbbacktester</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('financial') }}">Finance data</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('sma_strategy') }}">SMA strategy</a>
+          </li>
+          
+        </ul>
+      </div>
+      <div class="col-10">
+        <h3>Ticker: {{ticker}}</h3>
+        <h3>Performance metrics</h3>
+        <p>Mean return calculate average return over time</p>
+        <p>Daily: {{"{:.2f}".format(mean_return_d * 100)}}%</p>
+        <p>Monthly: {{"{:.2f}".format(mean_return_m * 100)}}%</p>
+        <p>Yearly: {{"{:.2f}".format(mean_return_y * 100)}}%</p>
+        <h3>Standard deviation of returns: metric for the risk of the instrument (ticker)</h3>
+        <p>Daily: {{"{:.2f}".format(std_returns_d * 100)}}%</p>
+        <p>Monthly: {{"{:.2f}".format(std_returns_m * 100)}}%</p>
+        <p>Yearly: {{"{:.2f}".format(std_returns_y * 100)}}%</p>
+        <h3>Annualized Performance: returns Anualized return/risk</h3>
+        <p>Return {{"{:.2f}".format(annualized_perf[0] * 100)}}%| Risk {{"{:.2f}".format(annualized_perf[1] * 100)}}% </p>
+        <h3>Price chart</h3>
+        <div class="chart" id="price">
+          <script>
+            var graphs = {{ plot_price | safe}};
+            Plotly.plot('price', graphs, {});
+          </script>
+        </div>
+        <h3>Plot Returns</h3>
+        <div class="chart" id="plot_returns">
+          <script>
+            var graphs = {{ plot_returns | safe}};
+            Plotly.plot('plot_returns', graphs, {});
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <footer>
+    <div class="row">
+      <div class="col-md-6">
+        <p>Copyright &copy; 2021 To the Moon</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="#" class="text-dark">Terms of Use</a>
+        <span class="text-muted mx-2">|</span>
+        <a href="#" class="text-dark">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+  </div>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+<!-- https://blog.heptanalytics.com/flask-plotly-dashboard/ -->

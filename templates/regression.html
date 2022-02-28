@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap Fluid Layout</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a href="#" class="navbar-brand">#2theMOON</a>
+      <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav">
+          <a href="#" class="nav-item nav-link active">Home</a>
+          <a href="#" class="nav-item nav-link">Services</a>
+          <a href="#" class="nav-item nav-link">About</a>
+          <a href="#" class="nav-item nav-link">Contact</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        {% if session['ticker']%}
+        <div class="jumbotron">
+          <h1 class="display-4">{{session['ticker'].upper()}}</h1>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <ul class="list-group">
+          <li class="list-group-item"><a href="{{ url_for('home') }}">BoilingerBands</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('fib') }}">Fibonachi</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('prediction') }}">Prediction</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('mean_reversion_bb') }}">Mean reversion BB</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('mlbbacktester') }}">mlbbacktester</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('financial') }}">Finance data</a>
+          </li>
+          <li class="list-group-item"><a href="{{ url_for('sma_strategy') }}">SMA strategy</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-10">
+        <h1>Hi</h1>
+        <div class="chart" id="plot_price">
+          <script>
+            var graphs = {{ plot_price | safe}};
+            Plotly.plot('plot_price', graphs, {});
+          </script>
+        </div>
+        <h1>A Simple Linear Model to predict Financial Returns</h1>
+        <div class="chart" id="plot_scater">
+          <script>
+            var graphs = {{ plot_scater | safe}};
+            Plotly.plot('plot_scater', graphs, {});
+          </script>
+        </div>
+        <div class="chart" id="sickit">
+          <script>
+            var graphs = {{ sickit | safe}};
+            Plotly.plot('sickit', graphs, {});
+          </script>
+        </div>
+        <h1>Line plot predictive returns and actual returns</h1>
+        <div class="chart" id="returns">
+          <script>
+            var graphs = {{ returns | safe}};
+            Plotly.plot('returns', graphs, {});
+          </script>
+        </div>
+        <h1>Most simpe machine learning strategy</h1>
+        <h1>If forecasted return is positive +1 / negative is -1</h1>
+        <h3>Prediciton is: {{forecast_prediciton[0]}}</h3>
+        <h3>Hit ratio of correctly forecasted market directions : {{forecast_prediciton[1] * 100}}%</h3>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h1>A Multiple Regression Model to predict Financial Returns</h1>
+        <p>Not the best stragegy after costs??</p>
+        <h3>New hit raio: {{new_prediciton* 100}}%</h3>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h1>Back Testing</h1>
+        <p>performance before trding costs</p>
+        <div class="chart" id="back_testing">
+          <script>
+            var graphs = {{ back_testing | safe}};
+            Plotly.plot('back_testing', graphs, {});
+          </script>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h1>Forward Testing</h1>
+        <p>look ahead bias</P>
+        <p>This strategy not the best to many trades: {{counts}}</p>
+        <p>Not done yet. Split dataframe info  half and second half can be used for forward testing </p>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+      </div>
+
+
+    </div>
+  </div>
+  </div>
+  <hr>
+  <footer>
+    <div class="row">
+      <div class="col-md-6">
+        <p>Copyright &copy; 2021 To the Moon</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <a href="#" class="text-dark">Terms of Use</a>
+        <span class="text-muted mx-2">|</span>
+        <a href="#" class="text-dark">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+  </div>
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
+
+<!-- https://blog.heptanalytics.com/flask-plotly-dashboard/ -->
